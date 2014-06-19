@@ -1,0 +1,295 @@
+! function () {
+    if (window.sessionStorage) {
+        var a = {},
+            b = this;
+        a.VERSION = "0.1.1";
+        var c = document.referrer,
+            d = {},
+            e = {
+                AdWord: {
+                    google: 1617,
+                    match: 500
+                },
+                regular: {
+                    google: 22,
+                    match: 101
+                },
+                image: {
+                    google: 245,
+                    match: 102
+                },
+                news: {
+                    google: 297,
+                    match: 103
+                },
+                siteLink: {
+                    google: 2060,
+                    match: 104
+                },
+                oneLineSiteLink: {
+                    google: 338,
+                    match: 105
+                },
+                "default": 199,
+                referral: 400,
+                organic: 101,
+                social: 200,
+                direct: 300
+            },
+            f = {
+                searchEngine: /\.(google|yahoo|bing|ask|duckduckgo)\./gi,
+                social: /^(?:https?:\/\/)?(?:[\da-z\.-]+)\.(facebook|twitter|youtube|vimeo|path|linkedin|pinterest|tumblr|flickr|instagram|myspace)\./gi,
+                ved: /ved=(\w+)/gi,
+                vedPlainText: /([a-z]+):([0-9]+)/gi,
+                vedBase64: /([\x80-\xff]*[\x00-\x7f])([\x80-\xff]*[\x00-\x7f])/g,
+                keyword: /[&?][p|q]{1}=([^&]{1,})&/gi
+            },
+            g = function () {
+                try {
+                    var b = sessionStorage.getItem("mc-stacktrace");
+                    if (d = b ? JSON.parse(b) : {
+                        domain: document.domain,
+                        history: [],
+                        referrer: null,
+                        past: null
+                    }, null == d.referrer) {
+                        var c = Math.round(+new Date / 1e3),
+                            e = localStorage.getItem("mc-analitics");
+                        e ? (a.history = JSON.parse(e), a.history.count += 1) : a.history = {
+                            count: 1,
+                            date: c
+                        }, d.past = a.history, localStorage.setItem("mc-analitics", JSON.stringify(a.history))
+                    }
+                    return !0
+                } catch (f) {
+                    return console.log("Error during loading : " + f), !1
+                }
+            },
+            h = function (a) {
+                var b, c = {
+                        t: 2,
+                        r: 6,
+                        s: 7,
+                        i: 1
+                    },
+                    d = {},
+                    e = function (a) {
+                        for (var b = 0, c = 0; c < a.length; ++c) b += (127 & a.charCodeAt(c)) << 7 * c;
+                        return b
+                    };
+                if (a.match(/^1/)) {
+                    for (; null !== (b = f.vedPlainText.exec(a));) d[c[b[1]] || b[1]] = parseInt(b[2], 10);
+                    return d
+                }
+                for (var g = atob(a.replace(/_/, "+").replace("-", "/").substr(1)); null !== (b = f.vedBase64.exec(g));) d[e(b[1]) >> 3] = e(b[2]);
+                return d
+            },
+            i = function (a) {
+                var b;
+                if (0 === a.indexOf(location.protocol + "//" + location.host) || "" == a) return e.direct;
+                if (a.match(f.searchEngine)) return e.organic;
+                if (a.match(f.social)) return e.social;
+                if (!(b = f.ved.exec(a))) return e.referral;
+                var c = h(b[1]);
+                switch (c[2]) {
+                case e.regular.google:
+                    return e.regular.match;
+                case e.AdWord.google:
+                    return e.AdWord.match;
+                case e.image.google:
+                    return e.image.match;
+                case e.news.google:
+                    return e.news.match;
+                case e.siteLink.google:
+                    return e.siteLink.match;
+                case e.oneLineSiteLink.google:
+                    return e.oneLineSiteLink.match;
+                default:
+                    return e.default
+                }
+            },
+            j = function (a) {
+                var b;
+                return (b = f.keyword.exec(a)) ? decodeURIComponent(b[1]).replace(/[+]/g, " ") : []
+            },
+            k = function () {
+                try {
+                    sessionStorage.setItem("mc-stacktrace", JSON.stringify(d))
+                } catch (a) {
+                    console.log("Error during save :: " + a)
+                }
+            };
+        a.detroy = function () {
+            try {
+                localStorage.removeItem("mc-stacktrace")
+            } catch (a) {
+                console.log("Error during destroy :: " + a)
+            }
+        }, a.get = function () {
+            return d
+        }, a.run = function () {
+            g() && (d.referrer || (d.referrer = {
+                type: i(c),
+                url: c,
+                keyword: j(c)
+            }), d.history.push(window.location.pathname), k())
+        }, b.mcAnalytics = a, a.run()
+    }
+}();
+var MC_ENDPOINT = window._EP;
+if ("undefined" != typeof MC) throw new Error("You've multiple scripts of ManyContacts in your page !");
+var MC = {
+    id: window.__bID,
+    htmlCSS: null,
+    css: ".mc--iframe-responsive-wrapper{position: fixed !important;display: block !important;z-index: 2147483630 !important;top: 0px !important;right: 10px !important;padding: 0 !important;margin: 0 !important;}.mc--iframe-responsive-wrapper.open{right: 0px !important;}.mc--iframe-responsive-wrapper .mc--iframe-ratio{display: block !important;width: 46px !important;height: 43px !important;}.mc--iframe-responsive-wrapper .mc--iframe{position: absolute !important;top: 0 !important;right: 0 !important;width: 46px !important;height: 53px !important;}.mc--iframe-responsive-wrapper.open,.mc--iframe-ratio.open,.mc--iframe.open{height: 53px !important;width: 100% !important;}.mc--iframe-responsive-wrapper.open.full,.mc--iframe-ratio.open.full,.mc--iframe.open.full{height: 100% !important;}",
+    overlayCss: "@-webkit-keyframes bfa{0%, 50%, 100%{background-position: 100% 20%;}25%, 75%{background-position: 100% 0%;}}@-moz-keyframes bfa{0%, 50%, 100%{background-position: 100% 20%;}25%, 75%{background-position: 100% 0%;}}@-o-keyframes bfa{0%, 50%, 100%{background-position: 100% 20%;}25%, 75%{background-position: 100% 0%;}}@keyframes bfa{0%, 50%, 100%{background-position: 100% 20%;}25%, 75%{background-position: 100% 0%;}}@media print{.overlay-highlight, #woobar, .wb-black-layer, .woobar-pusher{display: none;}} .overlay-highlight{position: fixed;top: 0;left: 0;right: 0;bottom: 0;border: 0;z-index: 2147483620;background: rgba(0, 0, 0, 0.8);}@media only screen and (max-width: 1024px){.overlay-highlight{display: none !important;}}.overlay-highlight h3{color: #fff !important;font-family: sans-serif !important;font-size: 40px;font-weight: 400;font-style: italic;width: 550px;display: block;line-height: 60px;text-align: right;background: url('https://www.manycontacts.com/assets/img/bfa.png') no-repeat right top;position: fixed;top: 50px;left: 50%;margin-left: -630px;padding: 130px 120px 0 0;border: 0;-webkit-animation-name: bfa;-moz-animation-name: bfa;-o-animation-name: bfa;animation-name: bfa;-webkit-animation-duration: 1000ms;-moz-animation-duration: 1000ms;-o-animation-duration: 1000ms;animation-duration: 1000ms;-webkit-animation-fill-mode: both;-moz-animation-fill-mode: both;-o-animation-fill-mode: both;animation-fill-mode: both;-webkit-animation-delay: 1s;-moz-animation-delay: 1s;-o-animation-delay: 1s;animation-delay: 1s;}.overlay-highlight .overlay-highlight-close{position: absolute;top: 60px;right: 22px;color: #AFAFAF;font-size: 20px;cursor: pointer;border: 0;}.overlay-highlight .overlay-highlight-close:hover{color: #fff;}",
+    iframeWrapper: null,
+    iframe: null,
+    barClosedCallback: function () {
+        MC.writeStorage("wbHidden", !0, 365)
+    },
+    barOpenedCallback: function () {
+        MC.writeStorage("wbHidden", !1, -30)
+    },
+    appendNodeToTag: function (a, b) {
+        document.getElementsByTagName(a)[0].appendChild(b)
+    },
+    readStorage: function (a) {
+        if ("undefined" != typeof window.localStorage) return JSON.parse(window.localStorage.getItem(a));
+        var b = document.cookie,
+            c = b.indexOf(" " + a + "=");
+        if (-1 === c && (c = b.indexOf(a + "=")), -1 === c) b = null;
+        else {
+            c = b.indexOf("=", c) + 1;
+            var d = b.indexOf(";", c); - 1 === d && (d = b.length), b = unescape(JSON.parse(b.substring(c, d)))
+        }
+        return b
+    },
+    writeStorage: function (a, b, c) {
+        if ("undefined" != typeof window.localStorage) 0 > c ? window.localStorage.removeItem(a) : window.localStorage.setItem(a, JSON.stringify(b));
+        else {
+            var d = new Date;
+            d.setDate(d.getDate() + c);
+            var e = escape(JSON.stringify(b)) + (null === c ? "" : "; expires=" + d.toUTCString());
+            document.cookie = a + "=" + e
+        }
+    },
+    showIframe: function () {
+        MC.iframe.style.display = "block"
+    },
+    shouldOpen: function () {
+        return !MC.readStorage("wbHidden") && !MC.readStorage("wbSaved")
+    },
+    shouldDisplayHV: function () {
+        return null === MC.readStorage("wbHighVisibility") || MC.readStorage("wbHighVisibility")
+    },
+    getParentBody: function () {
+        return document.body || document.getElementsByTagName("body")[0]
+    },
+    fail: function (a) {
+        "undefined" != typeof a ? console.log(a) : console.log("Could not load ManyContacts bar")
+    },
+    isValidEmailAddress: function (a) {
+        var b = new RegExp(/^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i);
+        return b.test(a)
+    },
+    createDiv: function (a) {
+        var b = document.createElement("div");
+        return b.className = a, b
+    },
+    createImg: function (a, b) {
+        var c = document.createElement("img");
+        return c.src = b, c.className = a, c
+    },
+    createIframe: function (a, b, c) {
+        var d = document.createElement("iframe");
+        return d.className = a, d.src = b, d.id = "wb-iframe", d.frameBorder = 0, d.scrolling = "no", d.style.display = "none", c && d.addEventListener("load", c), MC.iframe = d
+    },
+    getData: function (a) {
+        if ("undefined" != typeof window.localStorage) return JSON.parse(window.localStorage.getItem(a));
+        var b = document.cookie,
+            c = b.indexOf(" " + a + "=");
+        if (-1 === c && (c = b.indexOf(a + "=")), -1 === c) b = null;
+        else {
+            c = b.indexOf("=", c) + 1;
+            var d = b.indexOf(";", c); - 1 === d && (d = b.length), b = unescape(JSON.parse(b.substring(c, d)))
+        }
+        return b
+    },
+    ajax: function (a, b, c, d) {
+        "function" == typeof b ? (d = b, b = "GET", c = null) : "function" == typeof c && (d = c, c = null);
+        var e = new XMLHttpRequest;
+        e.open(b, a, !0), c && (http.setRequestHeader("Content-type", "application/x-www-form-urlencoded"), http.setRequestHeader("Content-length", c.length), http.setRequestHeader("Connection", "close")), e.onreadystatechange = function () {
+            4 == e.readyState && (200 == e.status ? d(null, e.responseText) : d(new Error("Couldn't run the AJAX request..."), null))
+        }, e.send(c)
+    },
+    injectExternalCSS: function (a) {
+        var b = document.createElement("link");
+        b.setAttribute("rel", "stylesheet"), b.setAttribute("type", "text/css"), b.setAttribute("href", a), document.head.appendChild(b)
+    },
+    injectCSS: function (a) {
+        var b = document.head || document.getElementsByTagName("head")[0],
+            c = document.createElement("style");
+        c.type = "text/css", c.styleSheet ? c.styleSheet.cssText = a : c.appendChild(document.createTextNode(a)), b.appendChild(c)
+    },
+    getTemplate: function (a) {
+        var b = function (b, c) {
+            "undefined" != typeof c && null !== c && c.length > 0 ? a(null, c) : a(new Error("Failed to load external ManyContacts components"), null)
+        };
+        MC.ajax([MC_ENDPOINT, "/bars/get/id/", MC.id].join(""), b)
+    },
+    injectBar: function () {
+        MC.getTemplate(function (a, b) {
+            if (a) MC.fail(a);
+            else {
+                var c = MC.createDiv("mc--iframe-responsive-wrapper");
+                MC.iframeWrapper = c;
+                var d = function () {
+                        var a = window.mcIframe = e.contentWindow;
+                        a.document.open(), a.document.write(b), a.document.close(), e.removeEventListener("load", d)
+                    },
+                    e = MC.createIframe("mc--iframe", "about:blank", d);
+                c.appendChild(MC.createImg("mc--iframe-ratio", "data:image/gif;base64,R0lGODlhEAAJAIAAAP///wAAACH5BAEAAAAALAAAAAAQAAkAAAIKhI+py+0Po5yUFQA7")), c.appendChild(e), MC.appendNodeToTag("body", c)
+            }
+        })
+    },
+    getHTMLCSS: function (a) {
+        return MC.htmlCSS || (MC.htmlCSS = window.getComputedStyle(a, null)), MC.htmlCSS
+    },
+    pushFixedElements: function (a) {
+        var b = 0,
+            c = jQuery("*:not(.woobar, .overlay-highlight, .modal)").filter(function () {
+                return "fixed" === jQuery(this).css("position")
+            });
+        c.each(function () {
+            "%" === jQuery(this).css("top").substr(-1) ? jQuery(this).css("top", parseInt(jQuery(this).css("top")) + a + "%") : jQuery(this).css("top", parseInt(jQuery(this).css("top")) + a + "px")
+        });
+        var d = setInterval(function () {
+            b++;
+            var e = jQuery("*:not(.woobar, .overlay-highlight, .modal)").filter(function () {
+                return "fixed" === jQuery(this).css("position")
+            });
+            e = e.not(c), 0 != e.length && (e.each(function () {
+                "%" === jQuery(this).css("top").substr(-1) ? jQuery(this).css("top", parseInt(jQuery(this).css("top")) + a + "%") : jQuery(this).css("top", parseInt(jQuery(this).css("top")) + a + "px")
+            }), clearInterval(d)), 10 == b && clearInterval(d)
+        }, 2e3)
+    },
+    pushContent: function (a) {
+        var b = window.jQuery || window.mcIframe.$,
+            c = document.getElementsByTagName("html")[0];
+        b(c).animate({
+            "margin-top": "+=" + a
+        }, 150), window.jQuery && MC.pushFixedElements(a)
+    },
+    loaded: function () {
+        MC.showIframe(), MC.shouldOpen() && window.mcIframe.barComponent.scheduleShow()
+    }
+};
+! function () {
+    MC.injectExternalCSS(MC_ENDPOINT + "/assets/css/font-awesome.css"), -1 != navigator.appVersion.indexOf("MSIE 7.") && MC.injectExternalCSS(MC_ENDPOINT + "/assets/css/font-awesome-ie7.min.css"), MC.injectCSS(MC.css), MC.injectCSS(MC.overlayCss), MC.injectBar();
+    var a = MC.readStorage("wbRef");
+    if (null === a) {
+        var b = document.referrer;
+        "undefined" != typeof b && MC.writeStorage("wbRef", b, 365)
+    }
+}();
